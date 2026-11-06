@@ -1,0 +1,28 @@
+name: Supabase Keepalive
+
+on:
+  schedule:
+    # Run every Monday at 05:00 UTC (10:30 AM IST)
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    name: Ping Supabase Free Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping REST Endpoint for masjid_settings
+        run: |
+          if [ -z "${{ secrets.SUPABASE_URL }}" ] || [ -z "${{ secrets.SUPABASE_ANON_KEY }}" ]; then
+            echo "Skipping keepalive ping: SUPABASE_URL or SUPABASE_ANON_KEY secret not configured yet."
+            exit 0
+          fi
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/masjid_settings?select=id&id=eq.1")
+          echo "Supabase keepalive HTTP status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ne 200 ] && [ "$HTTP_STATUS" -ne 204 ]; then
+            echo "Warning: Received unexpected HTTP status $HTTP_STATUS"
+            exit 1
+          fi
