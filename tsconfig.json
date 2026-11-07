@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -12,21 +11,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./apps/admin/src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "apps/admin/next-env.d.ts",
-    "apps/admin/src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "apps/admin/node_modules",
-    "apps/mobile/node_modules",
-    "_inspo-ref",
-    "_appllama-skills-ref"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "apps", "_inspo-ref", "_appllama-skills-ref"]
 }
-
