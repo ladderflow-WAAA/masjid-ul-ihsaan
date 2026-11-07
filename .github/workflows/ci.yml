@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  admin-portal:
-    name: Admin & Public Portal Checks
+  web-app:
+    name: Web App & PWA Checks
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -40,35 +40,3 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key' }}
-
-  mobile-app:
-    name: Mobile App Checks
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/mobile
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: apps/mobile/package.json
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: TypeScript typecheck
-        run: npm run typecheck
-
-      - name: Run unit tests
-        run: npm test
-
-      - name: Expo export bundle (Android)
-        run: npx expo export --platform android
-        env:
-          EXPO_PUBLIC_SUPABASE_URL: 'https://placeholder.supabase.co'
-          EXPO_PUBLIC_SUPABASE_ANON_KEY: 'placeholder-anon-key'
